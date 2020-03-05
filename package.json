@@ -1,0 +1,39 @@
+{
+  "name": "trollo",
+  "version": "0.1.0",
+  "description": "Trello viewer with current active and top backlog preview functionality",
+  "main": "./lib/index.js",
+  "bin": {
+    "trollo": "./lib/index.js"
+  },
+  "scripts": {
+    "start": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts",
+    "app": "npm run build && npm run test",
+    "build": "tsc -p .",
+    "test": "sudo npm i -g && trollo",
+    "refresh": "rm -rf ./node_modules ./package-lock.json && npm install"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/luke-biel/trollo.git"
+  },
+  "author": "Łukasz Biel <lukasz.p.biel@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/luke-biel/trollo/issues"
+  },
+  "homepage": "https://github.com/luke-biel/trollo#readme",
+  "dependencies": {
+    "clear": "^0.1.0",
+    "chalk": "^3.0.0",
+    "commander": "^4.1.1",
+    "figlet": "^1.3.0",
+    "path": "^0.12.7"
+  },
+  "devDependencies": {
+    "@types/node": "^13.7.7",
+    "nodemon": "^2.0.2",
+    "ts-node": "^8.6.2",
+    "typescript": "^3.8.3"
+  }
+}
