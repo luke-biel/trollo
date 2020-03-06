@@ -3,6 +3,7 @@ import clear from 'clear';
 import figlet from 'figlet';
 
 import { center, center_multiline } from './utils';
+import { TrelloResource } from './trello_resource';
         
 export class Board {
     title:           string;

@@ -1,4 +1,4 @@
-class TrelloResource {
+export class TrelloResource {
     board_name: string;
 
     constructor(board_name: string) {

@@ -2,17 +2,6 @@
   "name": "trollo",
   "version": "0.1.0",
   "description": "Trello viewer with current active and top backlog preview functionality",
-  "main": "./lib/index.js",
-  "bin": {
-    "trollo": "./lib/index.js"
-  },
-  "scripts": {
-    "start": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts",
-    "app": "npm run build && npm run test",
-    "build": "tsc -p .",
-    "test": "sudo npm i -g && trollo",
-    "refresh": "rm -rf ./node_modules ./package-lock.json && npm install"
-  },
   "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/luke-biel/trollo.git"
@@ -23,9 +12,25 @@
     "url": "https://github.com/luke-biel/trollo/issues"
   },
   "homepage": "https://github.com/luke-biel/trollo#readme",
+  "scripts": {
+    "build": "tsc -p .",
+    "clean": "rm -rf ./lib",
+    "clean-build": "npm run clean && npm run build",
+    "app": "npm run build && node ./lib/index.js",
+    "test": "npm run app",
+    "refresh-pkg": "rm -rf ./node_modules ./package-lock.json && npm install",
+    "daemon": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/index.ts",
+    "preinstall": "npm run clean-build"
+  },
+  "main": "./lib/index.js",
+  "bin": {
+    "trollo": "./lib/index.js"
+  },
   "dependencies": {
-    "clear": "^0.1.0",
+    "@types/clear": "^0.1.0",
+    "@types/figlet": "^1.2.0",
     "chalk": "^3.0.0",
+    "clear": "^0.1.0",
     "commander": "^4.1.1",
     "figlet": "^1.3.0",
     "path": "^0.12.7"
