@@ -110,5 +110,5 @@ temp/
 
 # End of https://www.gitignore.io/api/node
 
-lib/*.js
-lib/*.ts
+lib/**/*.js
+lib/**/*.ts

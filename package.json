@@ -29,6 +29,7 @@
   "dependencies": {
     "@types/clear": "^0.1.0",
     "@types/figlet": "^1.2.0",
+    "axios": "^0.19.2",
     "chalk": "^3.0.0",
     "clear": "^0.1.0",
     "commander": "^4.1.1",

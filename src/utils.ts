@@ -4,5 +4,5 @@ export function center(text: string, limit: number | null = null) {
 }
 
 export function center_multiline(text: string) {
-    return text.split('\n').map(function(value, index, array) { return center(value) }).join('\n')
+    return text.split('\n').map(function (value, _idx, _arr) { return center(value) }).join('\n')
 }
