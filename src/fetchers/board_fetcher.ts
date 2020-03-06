@@ -1,9 +1,11 @@
+import { Config } from '../dto/config';
 import axios, { AxiosResponse } from 'axios';
+import { boardURL } from '../url';
+import { ListDTO } from '../dto/list_dto';
 
-import { Config } from "../dto/config";
-import { BoardDTO } from '../dto/board_dto';
-import { BOARDS_URL } from '../const';
-
+/**
+ * Responsible for fetching data present on **TRELLO** board
+ */
 export class BoardFetcher {
     config: Config;
 
@@ -11,7 +13,7 @@ export class BoardFetcher {
         this.config = config;
     }
 
-    async fetch(): Promise<AxiosResponse<Array<BoardDTO>>> {
-        return axios.get(`${BOARDS_URL}?key=${this.config.api_key}&token=${this.config.api_token}`)
+    fetch(id: string): Promise<AxiosResponse<Array<ListDTO>>> {
+        return axios.get(`${boardURL(id)}/lists?key=${this.config.apiKey}&token=${this.config.apiToken}&fields=name,id`);
     }
 }

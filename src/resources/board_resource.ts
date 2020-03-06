@@ -1,33 +1,69 @@
+import { BoardFetcher } from '../fetchers/board_fetcher';
+import { Config } from '../dto/config';
+import { ListResource } from './list_resource';
+
+/**
+ * Represents board model and controller
+ */
 export class BoardResource {
+    config: Config;
     name: string;
     id: string;
 
-    private is_filled: boolean = false;
+    private toDoRes: ListResource | null = null;
+    private inProgressRes: ListResource | null = null;
 
-    constructor(board_name: string, board_id: string) {
-        this.name = board_name
-        this.id = board_id
+    private isFilled: boolean = false;
+
+    constructor(config: Config, name: string, id: string) {
+        this.config = config;
+        this.name = name;
+        this.id = id;
     }
 
     todo() {
-        if (!this.is_filled) {
+        if (!this.isFilled) {
             this.fill();
         }
 
         // TODO
     }
 
-    in_progress() {
-        if (!this.is_filled) {
+    inProgress() {
+        if (!this.isFilled) {
             this.fill();
         }
 
         // TODO
     }
 
-    fill() {
-        // let fetcher = new TrelloResourceFetcher();
+    async fill() {
+        const fetcher = new BoardFetcher(this.config);
 
-        // let data = fetcher.fetch();
+        await fetcher
+            .fetch(this.id)
+            .then(async (response) => {
+                response.data.map((dto, _idx, _arr) => {
+                    switch (dto.name) {
+                    case 'To Do':
+                        this.toDoRes = new ListResource(this.config, dto.id, dto.name);
+                        break;
+
+                    case 'In Progress':
+                        this.inProgressRes = new ListResource(this.config, dto.id, dto.name);
+                        break;
+
+                    default:
+                        break;
+                    }
+                });
+
+                if (this.toDoRes != null && this.inProgressRes != null) {
+                    this.isFilled = true;
+
+                    await this.toDoRes.fill();
+                    await this.inProgressRes.fill();
+                }
+            });
     }
 }

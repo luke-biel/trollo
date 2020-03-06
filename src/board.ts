@@ -5,56 +5,64 @@ import figlet from 'figlet';
 import { center } from './utils';
 import { BoardResource } from './resources/board_resource';
 import { Config } from './dto/config';
-import { BoardFetcher } from './fetchers/board_fetcher';
+import { BoardListFetcher } from './fetchers/board_list_fetcher';
 
+/**
+ * 
+ */
 export class Board {
     title: string;
-    board_resources: Array<BoardResource>;
+    boardResources: Array<BoardResource>;
     config: Config;
 
     private readonly widthLimit = process.stdout.columns / 2;
 
     constructor(config: Config) {
-        this.title = "Your board"
-        this.board_resources = []
-        this.config = config
+        this.title = 'Your board';
+        this.boardResources = [];
+        this.config = config;
 
-        this.retrieve_boards()
+        this.retrieveBoards();
     }
 
     draw() {
         clear();
 
-        this.drawTitle()
+        this.drawTitle();
 
-        console.log('-'.repeat(this.widthLimit) + '\n')
+        console.log('-'.repeat(this.widthLimit) + '\n');
 
-        this.drawBoards()
+        this.drawBoards();
     }
 
-    private retrieve_boards() {
-        // TODO: curl "https://api.trello.com/1/members/me/boards?key=$TRELLO_KEY&token=$TRELLO_TOKEN"
-        let fetcher = new BoardFetcher(this.config);
+    private retrieveBoards() {
+        let fetcher = new BoardListFetcher(this.config);
 
-        fetcher.fetch().then((response) => {
-            this.board_resources = response.data.map((dto, _idx, _arr) => new BoardResource(dto.name, dto.id));
-            this.draw();
-        })
+        fetcher
+            .fetch()
+            .then((response) => {
+                this.boardResources = response.data.map((dto, _idx, _arr) => new BoardResource(this.config, dto.name, dto.id));
+                this.draw();
+            })
+            .then(() => {
+                this.boardResources.forEach((res, _idx, _arr) => res.fill());
+                this.draw();
+            });
     }
 
     private drawTitle() {
-        console.log(chalk.white(figlet.textSync(this.title, { horizontalLayout: 'full' })))
+        console.log(chalk.white(figlet.textSync(this.title, { horizontalLayout: 'full' })));
     }
 
     private drawBoards() {
-        if (this.board_resources.length == 0) {
-            console.log(center("You have no boards!\n", this.widthLimit));
+        if (this.boardResources.length == 0) {
+            console.log(center('You have no boards!\n', this.widthLimit));
 
-            return
+            return;
         }
 
-        this.board_resources.forEach(board_resource => {
-            console.log(board_resource.name)
+        this.boardResources.forEach(boardResource => {
+            console.log(boardResource.name);
         });
     }
 }

@@ -1,23 +1,23 @@
 #!/usr/bin/env node
 
-import { Board } from "./board";
-import { Config } from "./dto/config";
+import { Board } from './board';
+import { Config } from './dto/config';
 
-let trello_token = process.env.TRELLO_TOKEN;
+let trelloToken = process.env.TRELLO_TOKEN;
 
-if (trello_token === undefined) {
-    throw "Missing TRELLO_TOKEN env variable";
+if (trelloToken === undefined) {
+    throw 'Missing TRELLO_TOKEN env variable';
 }
 
-let trello_key = process.env.TRELLO_KEY;
+let trelloKey = process.env.TRELLO_KEY;
 
-if (trello_key === undefined) {
-    throw "Missing TRELLO_KEY env variable";
+if (trelloKey === undefined) {
+    throw 'Missing TRELLO_KEY env variable';
 }
 
 let config: Config = {
-    api_token: trello_token,
-    api_key: trello_key,
+    apiToken: trelloToken,
+    apiKey: trelloKey,
 };
 
 let board = new Board(config);
