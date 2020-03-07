@@ -22,4 +22,4 @@ let config: Config = {
 
 let board = new Board(config);
 
-board.draw();
+board.init();

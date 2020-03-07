@@ -13,28 +13,34 @@ export class BoardResource {
     private toDoRes: ListResource | null = null;
     private inProgressRes: ListResource | null = null;
 
-    private isFilled: boolean = false;
-
     constructor(config: Config, name: string, id: string) {
         this.config = config;
         this.name = name;
         this.id = id;
     }
 
-    todo() {
-        if (!this.isFilled) {
-            this.fill();
+    toDo(): ListResource {
+        if (this.toDoRes == null) {
+            throw 'Tried to fetch "To Do" resource which wasn\'t populated yet';
         }
 
-        // TODO
+        return this.toDoRes;
     }
 
-    inProgress() {
-        if (!this.isFilled) {
-            this.fill();
+    hasToDo(): boolean {
+        return this.toDoRes != null;
+    }
+
+    inProgress(): ListResource {
+        if (this.inProgressRes == null) {
+            throw 'Tried to fetch "In Progress" resource which wasn\'t populated yet';
         }
 
-        // TODO
+        return this.inProgressRes;
+    }
+
+    hasInProgress(): boolean {
+        return this.inProgressRes != null;
     }
 
     async fill() {
@@ -42,28 +48,28 @@ export class BoardResource {
 
         await fetcher
             .fetch(this.id)
-            .then(async (response) => {
+            .then((response) => {
                 response.data.map((dto, _idx, _arr) => {
                     switch (dto.name) {
                     case 'To Do':
-                        this.toDoRes = new ListResource(this.config, dto.id, dto.name);
+                        this.toDoRes = new ListResource(this.config, dto.id, dto.name, this);
                         break;
 
                     case 'In Progress':
-                        this.inProgressRes = new ListResource(this.config, dto.id, dto.name);
+                        this.inProgressRes = new ListResource(this.config, dto.id, dto.name, this);
                         break;
 
                     default:
                         break;
                     }
                 });
-
-                if (this.toDoRes != null && this.inProgressRes != null) {
-                    this.isFilled = true;
-
-                    await this.toDoRes.fill();
-                    await this.inProgressRes.fill();
-                }
             });
+
+            
+
+        if (this.toDoRes != null && this.inProgressRes != null) {
+            await this.toDoRes.fill();
+            await this.inProgressRes.fill();
+        }
     }
 }

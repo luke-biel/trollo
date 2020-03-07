@@ -1,14 +1,14 @@
 import chalk from 'chalk';
-import clear from 'clear';
 import figlet from 'figlet';
+import { table } from 'table';
 
-import { center } from './utils';
+import { center, formatTable } from './utils';
 import { BoardResource } from './resources/board_resource';
 import { Config } from './dto/config';
 import { BoardListFetcher } from './fetchers/board_list_fetcher';
 
 /**
- * 
+ * TODO: write me
  */
 export class Board {
     title: string;
@@ -21,33 +21,34 @@ export class Board {
         this.title = 'Your board';
         this.boardResources = [];
         this.config = config;
-
-        this.retrieveBoards();
     }
 
-    draw() {
-        clear();
+    async init() {
+        console.log('fetching boards data...');
 
+        await this.retrieveBoards();
+
+        this.draw();
+    }
+
+    private draw() {
         this.drawTitle();
-
-        console.log('-'.repeat(this.widthLimit) + '\n');
 
         this.drawBoards();
     }
 
-    private retrieveBoards() {
+    private async retrieveBoards() {
         let fetcher = new BoardListFetcher(this.config);
 
-        fetcher
+        await fetcher
             .fetch()
             .then((response) => {
                 this.boardResources = response.data.map((dto, _idx, _arr) => new BoardResource(this.config, dto.name, dto.id));
-                this.draw();
-            })
-            .then(() => {
-                this.boardResources.forEach((res, _idx, _arr) => res.fill());
-                this.draw();
             });
+
+        for (const res of this.boardResources) {
+            await res.fill();
+        }
     }
 
     private drawTitle() {
@@ -61,8 +62,28 @@ export class Board {
             return;
         }
 
-        this.boardResources.forEach(boardResource => {
-            console.log(boardResource.name);
-        });
+        let waiting = this.boardResources
+            .filter((res) => res.hasToDo())
+            .map((res) => {
+                return res.toDo();
+            });
+
+        let working = this.boardResources
+            .filter((res) => res.hasInProgress())
+            .map((res) => {
+                return res.inProgress();
+            });
+
+        console.log(
+            table(
+                formatTable(working, '#In Progress')
+            )
+        );
+
+        console.log(
+            table(
+                formatTable(waiting, '#To Do')
+            )
+        );
     }
 }
