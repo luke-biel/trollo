@@ -10,5 +10,5 @@ I assumed a specific format in all my trello projects, which allows me to group 
 
 Client requires you to setup two environment variables:
 * TRELLO_KEY
-* TRELLO_TOKEN
+* TRELLO_TOKEN  
 you can acquire both from trello website
