@@ -79,7 +79,7 @@ export class Board {
                         res =>
                             chalk`{gray.italic ${
                                 res.parent.name
-                            }}: ${res.cards.pop()}`
+                            }}: ${res.cards.pop()?.name}`
                     )
                     .join("\n")
             );
