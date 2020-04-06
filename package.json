@@ -30,7 +30,7 @@
   "dependencies": {
     "@types/clear": "^0.1.0",
     "@types/figlet": "^1.2.0",
-    "@types/table": "^4.0.7",
+    "@types/table": "^5.0.0",
     "axios": "^0.19.2",
     "chalk": "^3.0.0",
     "clear": "^0.1.0",
